@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: download
+  name: download
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: download
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/webui-docker-default: "true"
+        io.kompose.service: download
+    spec:
+      containers:
+        - image: jlockman3/download:1
+          name: download
+          resources: {}
+          volumeMounts:
+            - mountPath: /data
+              name: download-claim0
+      restartPolicy: Always
+      volumes:
+        - name: download-claim0
+          persistentVolumeClaim:
+            claimName: download-claim0
+status: {}

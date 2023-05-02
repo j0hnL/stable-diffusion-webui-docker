@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: auto
+  name: auto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: auto
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/webui-docker-default: "true"
+        io.kompose.service: auto
+    spec:
+      containers:
+        - env:
+            - name: CLI_ARGS
+              value: --allow-code --medvram --xformers --enable-insecure-extension-access --api
+          image: jlockman3/sd-auto:1
+          name: auto
+          ports:
+            - containerPort: 7860
+          resources: {}
+          volumeMounts:
+            - mountPath: /data
+              name: auto-claim0
+            - mountPath: /output
+              name: auto-claim1
+      restartPolicy: Always
+      volumes:
+        - name: auto-claim0
+          persistentVolumeClaim:
+            claimName: auto-claim0
+        - name: auto-claim1
+          persistentVolumeClaim:
+            claimName: auto-claim1
+status: {}

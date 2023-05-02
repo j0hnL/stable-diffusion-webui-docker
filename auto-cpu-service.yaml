@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: auto-cpu
+  name: auto-cpu
+spec:
+  ports:
+    - name: "7860"
+      port: 7860
+      targetPort: 7860
+  type: LoadBalancer
+  selector:
+    io.kompose.service: auto-cpu
+status:
+  loadBalancer: {}
